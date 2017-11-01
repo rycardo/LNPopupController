@@ -91,7 +91,7 @@ const NSInteger LNBackgroundStyleInherit = -1;
 
 CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC)
 {
-	if(customBarVC) return customBarVC.preferredContentSize.height;
+	if(customBarVC) { return customBarVC.preferredContentSize.height; }
 	
 	return style == LNPopupBarStyleCompact ? LNPopupBarHeightCompact : LNPopupBarHeightProminent;
 }
@@ -106,7 +106,7 @@ LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
 	return rv;
 }
 
-LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyle(LNPopupBarProgressViewStyle style)
+static LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyle(LNPopupBarProgressViewStyle style)
 {
 	LNPopupBarProgressViewStyle rv = style;
 	if(rv == LNPopupBarProgressViewStyleDefault)
@@ -116,7 +116,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	return rv;
 }
 
-UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
+static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
 {
 	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
 }
@@ -169,6 +169,8 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	
 	if(self)
 	{
+		self.preservesSuperviewLayoutMargins = YES;
+		
 		_userBackgroundStyle = LNBackgroundStyleInherit;
 		
 		_backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
@@ -185,11 +187,9 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		[self addSubview:_toolbar];
 		
 		_titlesView = [[UIView alloc] initWithFrame:self.bounds];
-//		_titlesView.userInteractionEnabled = YES;
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
 		
 		_backgroundView.accessibilityTraits = UIAccessibilityTraitButton;
-//		_backgroundView.isAccessibilityElement = YES;
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
 		
 		[self _setNeedsTitleLayout];
@@ -709,7 +709,12 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	_imageView.image = _image;
 	_imageView.hidden = _image == nil;
 	
-	_imageView.center = CGPointMake(20 + LNPopupBarProminentImageWidth / 2, LNPopupBarHeightProminent / 2);
+	CGFloat safeLeading = self.layoutMargins.left;
+	if (@available(iOS 11.0, *)) {
+		safeLeading = MAX(self.safeAreaInsets.left, safeLeading);
+	}
+	
+	_imageView.center = CGPointMake(safeLeading + LNPopupBarProminentImageWidth / 2, LNPopupBarHeightProminent / 2);
 	_imageView.bounds = CGRectMake(0, 0, LNPopupBarProminentImageWidth, LNPopupBarProminentImageWidth);
 	
 	if(previouslyHidden != _imageView.hidden)
@@ -774,7 +779,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	UIBarButtonItem* spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
 	
 	LNPopupBarStyle resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
-	if(resolvedStyle == LNPopupBarStyleProminent)
+	if(resolvedStyle == LNPopupBarStyleProminent || resolvedStyle == LNPopupBarStyleCustom)
 	{
 		[items addObject:spacer];
 	}

@@ -75,6 +75,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return YES;
 	}
 	
+	if([otherGestureRecognizer.view isKindOfClass:[UIScrollView class]])
+	{
+		return YES;
+	}
+	
 	if([self.forwardedDelegate respondsToSelector:_cmd])
 	{
 		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:otherGestureRecognizer];
@@ -125,7 +130,9 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (void)setDelegate:(id<UIGestureRecognizerDelegate>)delegate
 {
+	_actualDelegate = [[LNPopupInteractionPanGestureRecognizerDelegate alloc] initWithPopupController:[_actualDelegate valueForKey:@"popupController"]];
 	_actualDelegate.forwardedDelegate = delegate;
+	[super setDelegate:_actualDelegate];
 }
 
 @end

@@ -9,6 +9,8 @@
 #ifndef LNPopupController_pch
 #define LNPopupController_pch
 
+//#define LNPopupControllerEnforceStrictClean
+
 #define MarqueeLabel __MarqueeLabel
 #define MarqueeType __MarqueeType
 #define MLLeftRight __MLLeftRight

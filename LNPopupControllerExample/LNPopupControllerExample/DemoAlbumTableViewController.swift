@@ -39,8 +39,8 @@ class DemoAlbumTableViewController: UITableViewController {
 	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-
-		if(ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 10) {
+		
+		if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 10 {
 			let insets = UIEdgeInsetsMake(topLayoutGuide.length, 0, bottomLayoutGuide.length, 0)
 			tableView.contentInset = insets
 			tableView.scrollIndicatorInsets = insets

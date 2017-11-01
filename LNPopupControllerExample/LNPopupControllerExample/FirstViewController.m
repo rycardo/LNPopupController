@@ -115,6 +115,24 @@
 	demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
 	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
 	
+	UILabel* topLabel = [UILabel new];
+	topLabel.text = NSLocalizedString(@"Top", @"");
+	topLabel.textColor = [UIColor whiteColor];
+	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
+	[demoVC.view addSubview:topLabel];
+	[NSLayoutConstraint activateConstraints:@[[topLabel.topAnchor constraintEqualToAnchor:demoVC.topLayoutGuide.bottomAnchor],
+											  [topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]]];
+	
+	UILabel* bottomLabel = [UILabel new];
+	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
+	bottomLabel.textColor = [UIColor whiteColor];
+	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
+	[demoVC.view addSubview:bottomLabel];
+	[NSLayoutConstraint activateConstraints:@[[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.bottomLayoutGuide.topAnchor],
+											  [bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]]];
+	
 	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
 	demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");
 	
@@ -122,7 +140,7 @@
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
 	targetVC.popupBar.previewingDelegate = self;
-	targetVC.popupBar.progressViewStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsProgressViewStyle] unsignedIntegerValue];;
+	targetVC.popupBar.progressViewStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsProgressViewStyle] unsignedIntegerValue];
 	targetVC.popupBar.barStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
 	targetVC.popupInteractionStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsInteractionStyle] unsignedIntegerValue];
 	targetVC.popupContentView.popupCloseButtonStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsCloseButtonStyle] unsignedIntegerValue];
@@ -144,7 +162,7 @@
 		[targetVC.popupBar setBackgroundStyle:UIBlurEffectStyleDark];
 		[targetVC.popupBar setTintColor:[UIColor yellowColor]];
 	}
-	
+
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
 }
 
